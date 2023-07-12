@@ -120,14 +120,16 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
+
+
+
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_insert_piece` BEFORE INSERT ON `piece` FOR EACH ROW begin
         if new.composer not in (select name from composer)  then
             signal SQLSTATE '45000'
             set message_text = "composer not exsits.";
         end if;
-    end */;;
-DELIMITER ;
+    end
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -160,6 +162,7 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+
 create procedure update_album(in opus_name varchar(20), in album_name varchar(50))
 begin
     if album_name not in (select name from album) then
@@ -169,5 +172,6 @@ begin
         update piece set album = album_name where Opus like CONCAT('%', opus_name, '%');
     end if;
 end;
+
 
 -- Dump completed on 2023-06-01 19:18:50

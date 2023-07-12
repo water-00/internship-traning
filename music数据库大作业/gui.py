@@ -3,13 +3,13 @@ from tkinter import ttk
 from tkinter import messagebox
 import pymysql
 
-db = pymysql.connect(host = "localhost", user = "root", 
-                     password = "wang250188", database = "music", port = 3306, autocommit = True)
+db = pymysql.connect(host = "localhost", user = "root",
+                     password = "111111", database = "music", port = 3306, autocommit = True)
 
 # 创建游标对象
 cursor = db.cursor()
 
-def search_piece():
+def search_piece():# 曲子查找界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], minsize=50)
     frm.columnconfigure(0, minsize=50)
@@ -17,13 +17,13 @@ def search_piece():
     e1 = Entry(master=frm, font=('Arial', 18), width=20)
     e1.grid(row=1, column=0)
     Label(master=frm, text='name:', font=('Arial', 18)).grid(row=2, column=0)
-    e2 = Entry(master=frm, font=('Arial', 18), width=20)
+    e2 = Entry(master=frm, font=('Arial', 18), width=20)# e1、e2输入
     e2.grid(row=3, column=0)
     click = lambda:exec_search_piece(frm, e1.get(), e2.get())
     Button(master=frm, text='search', command=click).grid(row=4, column=0)
 
 
-def exec_search_piece(frm, str1, str2):
+def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专辑
     tree = ttk.Treeview(master=frm)
     ls = ['Opus', 'name', 'composer', 'album', 'country']
     tree['columns'] = ('Opus', 'name', 'composer', 'album', 'country')
@@ -55,7 +55,7 @@ def exec_search_piece(frm, str1, str2):
         click = lambda:exec_update(frm, str1, e3.get())
         Button(master=frm, text="update", command=click).grid(row=8, column=0)
 
-def exec_update(frm, opus, new_album):
+def exec_update(frm, opus, new_album):# 更新专辑信息
     sql = "call update_album('" + opus + "', '" + new_album + "');"
     try:
         cursor.execute(sql)
@@ -63,7 +63,7 @@ def exec_update(frm, opus, new_album):
     except Exception as m:
         messagebox.showerror('error', m.args)
 
-def search_composer():
+def search_composer():# 查找作曲家界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4], minsize=50)
     frm.columnconfigure(0, minsize=50)
@@ -73,7 +73,7 @@ def search_composer():
     click = lambda:exec_search_composer(frm, e1.get())
     Button(master=frm, text='search', command=click).grid(row=3, column=0)
 
-def exec_search_composer(frm, str1):
+def exec_search_composer(frm, str1):# 查找作曲家
     tree = ttk.Treeview(master=frm)
     ls = ['name', 'birth', 'death', 'country']
     tree['columns'] = ('name', 'birth', 'death', 'country')
@@ -93,7 +93,7 @@ def exec_search_composer(frm, str1):
     tree['show'] = 'headings'
     tree.grid(row=4, column=0)
 
-def add_piece():
+def add_piece():# 添加曲子界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], minsize=50)
     frm.columnconfigure(0, minsize=50)
@@ -116,7 +116,7 @@ def add_piece():
     Button(master=frm, text='add', command=click).grid(row=8, column=0)
 
 
-def exec_add_piece(frm, opus, name, composer, album):
+def exec_add_piece(frm, opus, name, composer, album):# 添加曲子
     sql = "insert into piece values('" + opus + "', '" + name + "', '" + composer + "', '" + album + "');"
     try:
         cursor.execute(sql)
@@ -124,19 +124,66 @@ def exec_add_piece(frm, opus, name, composer, album):
     except Exception as m:
         messagebox.showerror("error", m.args)
 
-def add_composer():
-    4
+def add_composer():# 添加编曲者界面
+    frm = Toplevel()
+    frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], minsize=50)
+    frm.columnconfigure(0, minsize=50)
 
-def exec_add_composer(frm, name, birth_time='', death_time='', country=''):
-    4
+    Label(master=frm, text='name:', font=('Arial', 18)).grid(row=0, column=0)
+    e1 = Entry(master=frm, font=('Arial', 18), width=20)
+    e1.grid(row=1, column=0)
+    Label(master=frm, text='birth_date:', font=('Arial', 18)).grid(row=2, column=0)
+    e2 = Entry(master=frm, font=('Arial', 18), width=20)
+    e2.grid(row=3, column=0)
+    Label(master=frm, text='death_date:', font=('Arial', 18)).grid(row=4, column=0)
+    e3 = Entry(master=frm, font=('Arial', 18), width=20)
+    e3.grid(row=5, column=0)
+    Label(master=frm, text='country:', font=('Arial', 18)).grid(row=6, column=0)
+    e4 = Entry(master=frm, font=('Arial', 18), width=20)
+    e4.grid(row=7, column=0)
+
+    click = lambda: exec_add_composer(frm, e1.get(), e2.get(), e3.get(), e4.get())
+    Button(master=frm, text='add', command=click).grid(row=8, column=0)
+
+def exec_add_composer(frm, name, birth_time='', death_time='', country=''):# 添加编曲者
+    sql = "insert into composer values('" + name + "', '" + birth_time + "', '" + death_time + "', '" + country + "');"
+    try:
+        cursor.execute(sql)
+        messagebox.showinfo(message="Successful!")
+    except Exception as m:
+        messagebox.showerror("error", m.args)
 
 def add_album():
-    4
+    frm = Toplevel()
+    frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], minsize=50)
+    frm.columnconfigure(0, minsize=50)
+
+    Label(master=frm, text='name:', font=('Arial', 18)).grid(row=0, column=0)
+    e1 = Entry(master=frm, font=('Arial', 18), width=20)
+    e1.grid(row=1, column=0)
+    Label(master=frm, text='pulish_date:', font=('Arial', 18)).grid(row=2, column=0)
+    e2 = Entry(master=frm, font=('Arial', 18), width=20)
+    e2.grid(row=3, column=0)
+    Label(master=frm, text='company:', font=('Arial', 18)).grid(row=4, column=0)
+    e3 = Entry(master=frm, font=('Arial', 18), width=20)
+    e3.grid(row=5, column=0)
+    Label(master=frm, text='performer:', font=('Arial', 18)).grid(row=6, column=0)
+    e4 = Entry(master=frm, font=('Arial', 18), width=20)
+    e4.grid(row=7, column=0)
+
+    click = lambda: exec_add_album(frm, e1.get(), e2.get(), e3.get(), e4.get())
+    Button(master=frm, text='add', command=click).grid(row=8, column=0)
 
 def exec_add_album(frm, name, publish_time='', company='', performer=''):
-    4
+    sql = "insert into album values('" + name + "', '" + publish_time + "', '" + company + "', '" + performer + "');"
+    try:
+        cursor.execute(sql)
+        messagebox.showinfo(message="Successful!")
+    except Exception as m:
+        messagebox.showerror("error", m.args)
 
-def delete_piece():
+
+def delete_piece():# 删除曲子界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=50)
     frm.columnconfigure(0, minsize=50)
@@ -152,7 +199,7 @@ def delete_piece():
     Button(master=frm, text='search', command=click).grid(row=4, column=0)
 
 
-def exec_delete_piece(frm, opus, composer):
+def exec_delete_piece(frm, opus, composer):# 删除曲子
     tree = ttk.Treeview(master=frm)
     ls = ['Opus', 'name', 'composer', 'album']
     tree['columns'] = ('Opus', 'name', 'composer', 'album')
@@ -174,13 +221,13 @@ def exec_delete_piece(frm, opus, composer):
     click = lambda:cancel(frm, del_sql)
     Button(frm, text='cancel', command=click).grid(row=6, column=0)
     
-def confirm(frm, del_sql):
+def confirm(frm, del_sql):# 确认执行commit
     cursor.execute("START TRANSACTION")
     cursor.execute(del_sql)
     cursor.execute("COMMIT")
     messagebox.showinfo(message='Delete successfully.')
     
-def cancel(frm, del_sql):
+def cancel(frm, del_sql):# 取消执行rollback
     cursor.execute("START TRANSACTION")
     cursor.execute(del_sql)
     cursor.execute("ROLLBACK")
@@ -196,7 +243,7 @@ window = Tk()
 window.title('数据库系统作业')
 window.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=50)
 window.columnconfigure(0, minsize=50)
-
+#初始化主界面
 l = Label(master=window, text="my favorite pieces", font = ('Arial', 30), width = 20).grid(row=0, column=0)
 btn_search_piece = Button(master=window, text="search piece", command=search_piece).grid(row=1, column=0)
 btn_search_composer = Button(master=window, text="search composer", command=search_composer).grid(row=2, column=0)
