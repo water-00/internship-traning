@@ -1,6 +1,6 @@
 from py2neo import Graph, Node, Relationship
 
-graph = Graph("bolt://localhost:7687", auth=("neo4j", "12345678"))
+graph = Graph("bolt://localhost:7687", auth=("neo4j", "wang250188"))
 
 # 打印节点的 id 和属性
 

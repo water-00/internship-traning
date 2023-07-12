@@ -5,6 +5,8 @@ import pymysql
 
 db = pymysql.connect(host = "localhost", user = "root",
                      password = "111111", database = "music", port = 3306, autocommit = True)
+# db = pymysql.connect(host = "localhost", user = "root",
+#                     password = "wang250188", database = "music", port = 3306, autocommit = True)
 
 # 创建游标对象
 cursor = db.cursor()
