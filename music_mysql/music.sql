@@ -23,10 +23,10 @@ DROP TABLE IF EXISTS `album`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `album` (
-  `name` varchar(20) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `publish_time` date DEFAULT NULL,
   `company` varchar(50) DEFAULT NULL,
-  `performer` varchar(20) DEFAULT NULL,
+  `performer` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -49,10 +49,10 @@ DROP TABLE IF EXISTS `composer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `composer` (
-  `name` varchar(20) NOT NULL,
-  `birth_time` date DEFAULT NULL,
-  `death_time` date DEFAULT NULL,
-  `country` varchar(20) DEFAULT NULL,
+  `name` varchar(50) NOT NULL,
+  `birth_time` varchar(50) DEFAULT NULL,
+  `death_time` varchar(50) DEFAULT NULL,
+  `birthplace` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -63,7 +63,7 @@ CREATE TABLE `composer` (
 
 LOCK TABLES `composer` WRITE;
 /*!40000 ALTER TABLE `composer` DISABLE KEYS */;
-INSERT INTO `composer` VALUES ('Beethoven','1770-12-17','1827-03-26','German'),('Chopin','1810-03-01','1849-10-17','Poland'),('Grieg','1843-06-15','1907-09-04','Norway'),('Rachmaninoff','1873-04-01','1943-03-28','Russian'),('Tchaikovsky','1840-05-07','1893-11-06','Russian');
+--INSERT INTO `composer` VALUES ('Franz Joseph Haydn','31 mar 1732' ,  '31 may 1809' ,'Rohrau' ),('Carl Philipp Emanuel Bach','8 mar 1714 ',  '14 dec 1788' ,'Weimar' ),('Johann Sebastian Bach','31 mar 1685' ,  '28 jul 1750' ,'Eisenach '),('Richard Wagner','22 may 1813' ,  '13 feb 1883' ,'Leipzig');
 /*!40000 ALTER TABLE `composer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,9 +91,9 @@ DROP TABLE IF EXISTS `piece`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `piece` (
-  `Opus` varchar(20) NOT NULL,
+  `Opus` varchar(50) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `composer` varchar(20) NOT NULL,
+  `composer` varchar(50) NOT NULL,
   `album` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`Opus`,`composer`),
   KEY `piece_composer_name_fk` (`composer`),
@@ -109,7 +109,7 @@ CREATE TABLE `piece` (
 
 LOCK TABLES `piece` WRITE;
 /*!40000 ALTER TABLE `piece` DISABLE KEYS */;
-INSERT INTO `piece` VALUES ('Op. 1','Piano Concerto No. 1 in F sharp minor','Rachmaninoff','album3'),('Op. 10, No. 3','Etude in E major','Chopin','album1'),('Op. 23','Piano Concerto No. 1 in B flat minor','Tchaikovsky','album2'),('Op. 25, No. 1','Etude in A flat major ','Chopin','album1'),('Op. 25, No. 12','Etude in C minor ','Chopin','album1'),('Op. 25, No. 9','Etude in G flat major','Chopin','album1'),('Op. 38','Ballade No. 2 in F major','Chopin','album1'),('Op. 43','Rhapsody on a Theme of Paganini','Rachmaninoff','album3'),('Op. 58','Piano Sonata No. 3 in B minor','Chopin','album1'),('Op. 74','Symphony No. 6 in B minor Pathétique','Tchaikovsky','album2'),('Op. 81a','Piano Sonata No. 26 (\"Les Adieux\"), E flat','Beethoven','album4');
+--INSERT INTO `piece` VALUES ('Op. 1','Piano Concerto No. 1 in F sharp minor','Rachmaninoff','album3'),('Op. 10, No. 3','Etude in E major','Chopin','album1'),('Op. 23','Piano Concerto No. 1 in B flat minor','Tchaikovsky','album2'),('Op. 25, No. 1','Etude in A flat major ','Chopin','album1'),('Op. 25, No. 12','Etude in C minor ','Chopin','album1'),('Op. 25, No. 9','Etude in G flat major','Chopin','album1'),('Op. 38','Ballade No. 2 in F major','Chopin','album1'),('Op. 43','Rhapsody on a Theme of Paganini','Rachmaninoff','album3'),('Op. 58','Piano Sonata No. 3 in B minor','Chopin','album1'),('Op. 74','Symphony No. 6 in B minor Pathétique','Tchaikovsky','album2'),('Op. 81a','Piano Sonata No. 26 (\"Les Adieux\"), E flat','Beethoven','album4');
 /*!40000 ALTER TABLE `piece` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -163,7 +163,7 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 
-create procedure update_album(in opus_name varchar(20), in album_name varchar(50))
+create procedure update_album(in opus_name varchar(50), in album_name varchar(50))
 begin
     if album_name not in (select name from album) then
         signal sqlstate '45000'
