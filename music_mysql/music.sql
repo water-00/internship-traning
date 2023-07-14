@@ -34,12 +34,16 @@ CREATE TABLE `album` (
 --
 -- Dumping data for table `album`
 --
-
-LOCK TABLES `album` WRITE;
+--
+--LOCK TABLES `album` WRITE;
 /*!40000 ALTER TABLE `album` DISABLE KEYS */;
+--INSERT INTO `album` VALUES ('album1','2002-05-28','company1','A'),('album2','1990-11-12','company1','B'),('album3','2012-07-09','company2','C'),('album4','2018-08-12','company2','D');
+--UNLOCK TABLES;
+
 INSERT INTO `album` VALUES ('album1','2002-05-28','company1','A'),('album2','1990-11-12','company1','B'),('album3','2012-07-09','company2','C'),('album4','2018-08-12','company2','D');
+--UNLOCK TABLES;
+
 /*!40000 ALTER TABLE `album` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `composer`
@@ -128,7 +132,7 @@ UNLOCK TABLES;
             signal SQLSTATE '45000'
             set message_text = "composer not exsits.";
         end if;
-    end
+    end;
 
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -172,6 +176,15 @@ begin
         update piece set album = album_name where Opus like CONCAT('%', opus_name, '%');
     end if;
 end;
+
+--CREATE PROCEDURE update_album(IN opus_name VARCHAR(50), IN album_name VARCHAR(50))
+--BEGIN
+--    IF album_name NOT IN (SELECT name FROM album) THEN
+--        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'album not exists.';
+--    ELSE
+--        UPDATE piece SET album = album_name WHERE Opus LIKE CONCAT('%', opus_name, '%');
+--    END IF;
+--END;
 
 
 -- Dump completed on 2023-06-01 19:18:50
