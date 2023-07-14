@@ -16,7 +16,7 @@ def process_csv(input_file, output_file):
         
         for row in rows:
             for category in categories:
-                if category in row[1]:
+                if category.lower() in row[1].lower():
                     row[3] = category
         
     with open(output_file, 'w', newline='') as file:

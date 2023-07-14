@@ -1,12 +1,12 @@
 opus,name,composer,type
 626,Requiem,Wolfgang Amadeus Mozart,Requiem
 550,Symphony No. 40 in G minor,Wolfgang Amadeus Mozart,Symphony
-525,Eine kleine Nachtmusik (serenade no. 13),Wolfgang Amadeus Mozart,
-265,"12 piano variations ""Ah vous dirai-je, maman""",Wolfgang Amadeus Mozart,
+525,Eine kleine Nachtmusik (serenade no. 13),Wolfgang Amadeus Mozart,Serenade
+265,"12 piano variations ""Ah vous dirai-je, maman""",Wolfgang Amadeus Mozart,Variations
 455,"10 piano var. ""Unser dummer Poebel meint""",Wolfgang Amadeus Mozart,
 622,Concerto for Clarinet in A major,Wolfgang Amadeus Mozart,Concerto
 620,Die Zauberflöte,Wolfgang Amadeus Mozart,
-331,"Piano Sonata no. 11 in A ""Alla Turca"" (contains Turkish march)",Wolfgang Amadeus Mozart,Sonata
+331,"Piano Sonata no. 11 in A ""Alla Turca"" (contains Turkish march)",Wolfgang Amadeus Mozart,March
 527,Don Giovanni,Wolfgang Amadeus Mozart,
 618,"Ave, verum corpus",Wolfgang Amadeus Mozart,
 183,Symphony No. 25 in G minor,Wolfgang Amadeus Mozart,Symphony
@@ -14,9 +14,9 @@ opus,name,composer,type
 492,Le Nozze de Figaro,Wolfgang Amadeus Mozart,
 551,"Symphony No. 41 in C major ""Jupiter""",Wolfgang Amadeus Mozart,Symphony
 16,Symphony No. 1 in E flat major,Wolfgang Amadeus Mozart,Symphony
-466,Piano concerto no. 20 in  D minor,Wolfgang Amadeus Mozart,
+466,Piano concerto no. 20 in  D minor,Wolfgang Amadeus Mozart,Concerto
 475,Fantasia in C minor KV475,Wolfgang Amadeus Mozart,Fantasia
-491,Piano concerto no. 24 in C minor,Wolfgang Amadeus Mozart,
+491,Piano concerto no. 24 in C minor,Wolfgang Amadeus Mozart,Concerto
 370,Quartet for Oboe & Strings in F major,Wolfgang Amadeus Mozart,Quartet
 314,Concerto for Flute (or Oboe) in D major,Wolfgang Amadeus Mozart,Concerto
 66,2 arabesques,Claude Debussy,
@@ -29,7 +29,7 @@ opus,name,composer,type
 68,Rêverie pour piano,Claude Debussy,
 135,Sonate for cello and piano in D minor,Claude Debussy,
 116,Rhapsodie for clarinet and orchestra,Claude Debussy,
-65,Petite suite,Claude Debussy,
+65,Petite suite,Claude Debussy,Suite
 110,Images I,Claude Debussy,
 71,Valse romantique,Claude Debussy,
 88,Pelléas et Mélisande,Claude Debussy,
@@ -47,7 +47,7 @@ opus,name,composer,type
 182:3,Symphony No. 3 in C major Wq182,Carl Philipp Emanuel Bach,Symphony
 92:1,"Sonata for clarinet, bassoon & keyboard No. 1",Carl Philipp Emanuel Bach,Sonata
 124,Flute Sonata in E minor (Wq 124),Carl Philipp Emanuel Bach,Sonata
-23,Keyboard concerto in D minor H427,Carl Philipp Emanuel Bach,
+23,Keyboard concerto in D minor H427,Carl Philipp Emanuel Bach,Concerto
 92:6,"Sonata for clarinet, bassoon & keyboard No. 6",Carl Philipp Emanuel Bach,Sonata
 202:O4,Die Trennung in D minor,Carl Philipp Emanuel Bach,
 183:2,Symphony in E flat major Wq183,Carl Philipp Emanuel Bach,Symphony
@@ -59,13 +59,13 @@ opus,name,composer,type
 56,"Symphony no. 3 ""Scottish""",Felix Mendelssohn-Bartholdy,Symphony
 70,Elias,Felix Mendelssohn-Bartholdy,
 107,"Symphony no. 5 ""Reformation""",Felix Mendelssohn-Bartholdy,Symphony
-69,"3 English Church Pieces: (solo voices, chorus",Felix Mendelssohn-Bartholdy,
+69,"3 English Church Pieces: (solo voices, chorus",Felix Mendelssohn-Bartholdy,Chorus
 14,Rondo capriccioso in E Major,Felix Mendelssohn-Bartholdy,
 36,Paulus,Felix Mendelssohn-Bartholdy,
 20,Octet in E Flat Major for strings,Felix Mendelssohn-Bartholdy,
 28,"Fantasy in F Sharp minor, ""Sonate écossaise""",Felix Mendelssohn-Bartholdy,
 30,"Songs without Words, Vol. II",Felix Mendelssohn-Bartholdy,
-81,4 pieces for string quartet,Felix Mendelssohn-Bartholdy,
+81,4 pieces for string quartet,Felix Mendelssohn-Bartholdy,Quartet
 65:4,Sonata for organ no. 4 in B flat major,Felix Mendelssohn-Bartholdy,Sonata
 78:3,"Psalm 22 ""Mein Gott, warum hast du""",Felix Mendelssohn-Bartholdy,
 62,"Songs without Words, Vol. V",Felix Mendelssohn-Bartholdy,
@@ -74,7 +74,7 @@ opus,name,composer,type
 66,Piano Trio no. 2 in C minor,Felix Mendelssohn-Bartholdy,Trio
 44,6 soirées á Saint-Petersburg,Anton Rubinstein,
 86B,Die Walküre (Ride of the Valkyries),Richard Wagner,
-75,Lohengrin (contains wedding march),Richard Wagner,
+75,Lohengrin (contains wedding march),Richard Wagner,March
 90,Tristan und Isolde,Richard Wagner,
 86A,Das Rheingold,Richard Wagner,
 111,Parsifal,Richard Wagner,
@@ -103,7 +103,7 @@ opus,name,composer,type
 9,Carnaval,Robert Schumann,
 94,3 Romances op. 94,Robert Schumann,
 70,Adagio and Allegro,Robert Schumann,
-W23,Violin concerto in D minor,Robert Schumann,
+W23,Violin concerto in D minor,Robert Schumann,Concerto
 28,3 Romances op. 28,Robert Schumann,
 44,Piano Quintet,Robert Schumann,
 47,Piano Quartet in E flat major,Robert Schumann,Quartet
@@ -116,18 +116,18 @@ W23,Violin concerto in D minor,Robert Schumann,
 16:49,Piano Sonata No. 59 in E flat major,Franz Joseph Haydn,Sonata
 1:104,"Symphony no. 104 ""london""",Franz Joseph Haydn,Symphony
 22:9,"Missa in Tempore Belli ""Paukenmesse""",Franz Joseph Haydn,
-7a:4,Violin concerto no. 4 in G major,Franz Joseph Haydn,
+7a:4,Violin concerto no. 4 in G major,Franz Joseph Haydn,Concerto
 22:7,"Missa Brevis ""Sancti Joannis de Deo""",Franz Joseph Haydn,
 1:100,"Symphony no. 100 ""Military""",Franz Joseph Haydn,Symphony
 19,32 Pieces for mechanical clock (Flötenuhr),Franz Joseph Haydn,
 22:11,"Mass in D minor """"Lord Nelson""",Franz Joseph Haydn,Mass
 4:1,London Trio no.1 in C major,Franz Joseph Haydn,Trio
-18:11,Piano concerto in D major H. 18:11,Franz Joseph Haydn,
+18:11,Piano concerto in D major H. 18:11,Franz Joseph Haydn,Concerto
 22:6,"Missa Sancti Nicholai ""St. Nicholas Mass""",Franz Joseph Haydn,Mass
 7e:1,Trumpet Concerto,Franz Joseph Haydn,Concerto
 16:50,Piano Sonata No. 60 in C major,Franz Joseph Haydn,Sonata
 16:37,Piano Sonata No. 50 in D major,Franz Joseph Haydn,Sonata
-3:63,"String quartet in D major ""The Lark""",Franz Joseph Haydn,
+3:63,"String quartet in D major ""The Lark""",Franz Joseph Haydn,Quartet
 1:101,"Symphony no. 101 ""Clock""",Franz Joseph Haydn,Symphony
 1:34,Symphony no. 34,Franz Joseph Haydn,Symphony
 1,24 Caprices,Niccolò Paganini,Caprice
@@ -148,7 +148,7 @@ W23,Violin concerto in D minor,Robert Schumann,
 1043,Concerto for 2 violins in D minor,Johann Sebastian Bach,Concerto
 772+,Two-part inventions,Johann Sebastian Bach,
 1009,Cello Suite No. 3 in C,Johann Sebastian Bach,Suite
-1080,Art of fugue (Die Kunst der Fuge),Johann Sebastian Bach,
+1080,Art of fugue (Die Kunst der Fuge),Johann Sebastian Bach,Fugue
 147,Herz und Mund und Tat und Leben (contains Jesu joy of man''s desiring),Johann Sebastian Bach,
 1048,Brandenburg Concerto No. 3,Johann Sebastian Bach,Concerto
 649,"Ach bleib bei uns, Herr Jesu Christ BWV649",Johann Sebastian Bach,
@@ -158,7 +158,7 @@ W23,Violin concerto in D minor,Robert Schumann,
 36:6,Sonatina Op.36 No.6 in D major,Muzio Clementi,
 36:4,Sonatina Op.36 No.4 in F major,Muzio Clementi,
 36:5,Sonatina Op.36 No.5 in G major,Muzio Clementi,
-24:3,Piano sonata in E flat op. 24 no. 3,Muzio Clementi,
+24:3,Piano sonata in E flat op. 24 no. 3,Muzio Clementi,Sonata
 50:3,"Piano Sonata in G Minor ""Didone Abbandonata""",Muzio Clementi,Sonata
 25:5,Piano Sonata No. 5 in F Sharp Minor Op. 25,Muzio Clementi,Sonata
 24:2,Sonata in B flat Major,Muzio Clementi,Sonata
@@ -168,7 +168,7 @@ W23,Violin concerto in D minor,Robert Schumann,
 839,Ave Maria (Ellens Gesang III),Franz Schubert,
 759,"Symphony No. 8 in B minor ""Unfinished""",Franz Schubert,Symphony
 957,Schwanengesang,Franz Schubert,
-899,4 impromptus for piano op 90,Franz Schubert,
+899,4 impromptus for piano op 90,Franz Schubert,Impromptu
 929,Piano Trio No. 2 in E flat,Franz Schubert,Trio
 810,"String Quartet No.14 ""Death and the Maiden""",Franz Schubert,Quartet
 795,Die Schöne Müllerin,Franz Schubert,
@@ -184,9 +184,9 @@ W23,Violin concerto in D minor,Robert Schumann,
 956,Cello Quintet in C op. 163,Franz Schubert,
 667,"Quintet in A ""Forellen""",Franz Schubert,
 797,"Rosamunde, Fürstin von Cypern",Franz Schubert,
-20a,Swan Lake (suite),Pyotr Ilyich Tchaikovsky,
+20a,Swan Lake (suite),Pyotr Ilyich Tchaikovsky,Suite
 23,Piano Concerto no. 1,Pyotr Ilyich Tchaikovsky,Concerto
-71a,The Nutcracker - suite,Pyotr Ilyich Tchaikovsky,
+71a,The Nutcracker - suite,Pyotr Ilyich Tchaikovsky,Suite
 71,The Nutcracker,Pyotr Ilyich Tchaikovsky,
 74,"Symphony No.6 ""Pathétique""",Pyotr Ilyich Tchaikovsky,Symphony
 49,1812,Pyotr Ilyich Tchaikovsky,
@@ -246,14 +246,14 @@ W35,12 german folk songs,Johannes Brahms,
 124,Piano Concerto No. 1 in E flat,Franz Liszt,Concerto
 178,Piano Sonata in B minor,Franz Liszt,Sonata
 514,Mephisto Waltz No 1,Franz Liszt,Waltz
-144,3 concert etudes,Franz Liszt,
+144,3 concert etudes,Franz Liszt,Etude
 125,Piano Concerto No. 2 in A major,Franz Liszt,Concerto
 558,12 Lieder (Schubert),Franz Liszt,Lieder
 511a,Les Préludes (v2),Franz Liszt,
 359,Hungarian Rhapsodies for orchestra (Doppler),Franz Liszt,
 160,Années de pèlerinage I,Franz Liszt,
-141,6 trancendental etudes after Paganini (v2),Franz Liszt,
-145,2 concert etudes,Franz Liszt,
+141,6 trancendental etudes after Paganini (v2),Franz Liszt,Etude
+145,2 concert etudes,Franz Liszt,Etude
 126ii,"Totentanz Paraphrase on ""Dies Irae""",Franz Liszt,
 407,"Waltz from Gounod''s ""Faust""",Franz Liszt,Waltz
 97,Les Preludes (orch),Franz Liszt,Prelude
@@ -273,7 +273,7 @@ W59,Für Elise,Ludwig van Beethoven,
 35,"15 Variations with Fugue ""Eroica-Variationen""",Ludwig van Beethoven,Fugue
 57,"Piano Sonata No. 23 ""Appassionata""",Ludwig van Beethoven,Sonata
 10:1,Piano Sonata No. 5 in C minor,Ludwig van Beethoven,Sonata
-15,Piano concerto No. 1 in C major,Ludwig van Beethoven,
+15,Piano concerto No. 1 in C major,Ludwig van Beethoven,Concerto
 2:1,Piano Sonata No. 1 in F minor,Ludwig van Beethoven,Sonata
 61,Concerto for Violin & Orchestra,Ludwig van Beethoven,Concerto
 110,Piano Sonata no. 31 in A flat major,Ludwig van Beethoven,Sonata
