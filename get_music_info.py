@@ -16,6 +16,7 @@ import random
 
 music_data = []
 
+## 一个从网站上爬取对应音乐家作品的爬虫程序
 
 def read_csv(path):  # 读取关系csv文件，获取需要爬取的作曲家列表
     names = []

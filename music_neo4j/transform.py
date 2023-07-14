@@ -1,6 +1,6 @@
 import pandas as pd
 
-## 一个将musicians_relationships_eng.csv转换为formatted_file.csv的小脚本
+## 一个将musicians_relationships_eng.csv转换为formatted_file.csv的小脚本，主要目的是修改一下名字格式
 
 # 读取CSV文件
 df = pd.read_csv('musicians_relationships_eng.csv')
