@@ -6,13 +6,7 @@ import csv
 import random
 
 
-db = pymysql.connect(host="localhost", user="root",
-                     password="111111", database="music", port=3306, autocommit=True)
-# db = pymysql.connect(host = "localhost", user = "root",
-#                     password = "wang250188", database = "music", port = 3306, autocommit = True)
 
-# 创建游标对象
-cursor = db.cursor()
 
 def search_piece():# 曲子查找界面
     frm = Toplevel()
@@ -28,23 +22,38 @@ def search_piece():# 曲子查找界面
     Button(master=frm, text='search', command=click).grid(row=4, column=0)
 
 
-def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专辑
+def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专辑  # 多表查询
     tree = ttk.Treeview(master=frm)
-    ls = ['Opus', 'name', 'composer', 'album', 'country']
-    tree['columns'] = ('Opus', 'name', 'composer', 'album', 'country')
+    ls = ['Opus', 'name', 'composer', 'album', 'birthplace']
+    tree['columns'] = ('Opus', 'name', 'composer', 'album', 'birthplace')
     for i in ls:
         tree.column(i, anchor='center')
         tree.heading(i, text=i)
-    sql = "select * from info "
+    # sql = "select * from info "
+    # sql = "select opus opus, piece.name name, piece.composer composer, piece.album album, composer.birthplace birthplace from piece, composer where piece.composer = composer.name"
+    # if str1 != '' and str2 != '':
+    #     sql = sql + "and opus like '%" + str1 + "%' and piece.name like '%" + str2 + "%';"
+    # elif str1 != '':
+    #     sql = sql + "and opus like '%" + str1 + "%';"
+    # elif str2 != '':
+    #     sql = sql + "and piece.name like '%" + str2 + "%';"
+    # else:
+    #     Label(master=frm, text='input valid', font=('Arial', 18)).grid(row=5, column=0)
+    #     return
+    sql = "SELECT opus, piece.name, piece.composer, piece.album, composer.birthplace FROM piece, composer WHERE piece.composer = composer.name "
+
     if str1 != '' and str2 != '':
-        sql = sql + "where opus like '%" + str1 + "%' and name like '%" + str2 + "%';"
+        sql += "AND opus LIKE '%" + str1 + "%' AND piece.name LIKE '%" + str2 + "%'"
     elif str1 != '':
-        sql = sql + "where opus like '%" + str1 + "%';"
+        sql += "AND opus LIKE '%" + str1 + "%'"
     elif str2 != '':
-        sql = sql + "where name like '%" + str2 + "%';"
+        sql += "AND piece.name LIKE '%" + str2 + "%'"
     else:
         Label(master=frm, text='input valid', font=('Arial', 18)).grid(row=5, column=0)
         return
+
+    sql += ";"  # 添加分号表示 SQL 查询的结束
+
     cursor.execute(sql)
     result = cursor.fetchall()
     for i in range(len(result)):
@@ -243,7 +252,136 @@ def onCloseOtherFrame(otherFrame):
     window.update()
     window.deiconify() # 将主窗口恢复显示
 
+def db_init():
+    # 连接数据库
+    cnx = pymysql.connect(
+        host="localhost",
+        user="root",
+        password="111111",
+    )
 
+    # 创建数据库
+    cursor = cnx.cursor()
+    # 删除已存在的数据库（music）
+    cursor.execute("DROP DATABASE IF EXISTS music")
+
+    # 创建新的数据库（music）
+    cursor.execute("CREATE DATABASE music CHARACTER SET utf8mb4")
+    cursor.close()
+
+
+    # 切换到创建的数据库
+    # cnx.database = "music"
+    cursor = cnx.cursor()
+    cursor.execute("USE music")
+    cursor.close()
+
+    # 创建表
+    cursor = cnx.cursor()
+    create_album_table_query = """
+    CREATE TABLE album (
+      name VARCHAR(100) NOT NULL,
+      publish_time DATE DEFAULT NULL,
+      company VARCHAR(100) DEFAULT NULL,
+      performer VARCHAR(100) DEFAULT NULL,
+      PRIMARY KEY (name)
+    )
+    """
+    cursor.execute(create_album_table_query)
+    cnx.commit()
+    cursor.close()
+
+    # 插入数据
+    cursor = cnx.cursor()
+    insert_album_data_query = """
+    INSERT INTO album (name, publish_time, company, performer)
+    VALUES
+      ('album1', '2002-05-28', 'company1', 'A'),
+      ('album2', '1990-11-12', 'company1', 'B'),
+      ('album3', '2012-07-09', 'company2', 'C'),
+      ('album4', '2018-08-12', 'company2', 'D')
+    """
+    cursor.execute(insert_album_data_query)
+    cnx.commit()
+    cursor.close()
+
+    # 创建composer表
+    cursor = cnx.cursor()
+    create_composer_table_query = """
+    CREATE TABLE composer (
+      name VARCHAR(100) NOT NULL,
+      birth_time VARCHAR(100) DEFAULT NULL,
+      death_time VARCHAR(100) DEFAULT NULL,
+      birthplace VARCHAR(100) DEFAULT NULL,
+      PRIMARY KEY (name)
+    )
+    """
+    cursor.execute(create_composer_table_query)
+    cnx.commit()
+    cursor.close()
+
+    cursor = cnx.cursor()
+    create_piece_table_query = """
+    CREATE TABLE piece (
+      opus VARCHAR(100) NOT NULL,
+      name VARCHAR(100) DEFAULT NULL,
+      composer VARCHAR(100) NOT NULL,
+      album VARCHAR(100) DEFAULT NULL,
+      PRIMARY KEY (Opus, composer),
+      FOREIGN KEY (composer) REFERENCES composer (name),
+      FOREIGN KEY (album) REFERENCES album (name)
+    )
+    """
+    cursor.execute(create_piece_table_query)
+    cnx.commit()
+    cursor.close()
+
+
+
+    # 创建触发器
+    cursor = cnx.cursor()
+    create_trigger_query = """
+    CREATE TRIGGER check_insert_piece BEFORE INSERT ON piece FOR EACH ROW
+    BEGIN
+        DECLARE composer_count INT;
+        SELECT COUNT(*) INTO composer_count FROM composer WHERE name = NEW.composer;
+        IF composer_count = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Composer does not exist.';
+        END IF;
+    END
+    """
+    cursor.execute(create_trigger_query)
+    cnx.commit()
+    cursor.close()
+
+    # 创建存储过程
+    cursor = cnx.cursor()
+    create_procedure_query = """
+    CREATE PROCEDURE update_album(IN opus_name VARCHAR(50), IN album_name VARCHAR(50))
+    BEGIN
+        DECLARE album_count INT;
+        SELECT COUNT(*) INTO album_count FROM album WHERE name = album_name;
+        IF album_count = 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Album does not exist.';
+        ELSE
+            UPDATE piece SET album = album_name WHERE Opus LIKE CONCAT('%', opus_name, '%');
+        END IF;
+    END
+    """
+    cursor.execute(create_procedure_query)
+    cnx.commit()
+    cursor.close()
+
+    # 关闭数据库连接
+    cnx.close()
+
+
+#
+db_init()
+
+db = pymysql.connect(host="localhost", user="root", password="111111", database="music", port=3306, autocommit=True, charset="utf8mb4")
+# 创建游标对象
+cursor = db.cursor()
 
 #存composer
 with open('composer.csv', 'r', encoding='utf-8') as file:
@@ -269,12 +407,16 @@ with open('composer.csv', 'r', encoding='utf-8') as file:
 
         print(sql)
         # 执行SQL插入语句
-        cursor.execute(sql)
+        try:
+            cursor.execute(sql)
+        except:
+            continue
 
-cursor.commit()
+
+
 
 #存piece
-with open('piece.csv', 'r', encoding='utf-8') as file:
+with open('data/piece.csv', 'r', encoding='utf-8') as file:
     csv_reader = csv.reader(file)
     next(csv_reader)  # 跳过标题行
 
@@ -300,7 +442,6 @@ with open('piece.csv', 'r', encoding='utf-8') as file:
         print(sql)
         # 执行SQL插入语句
         cursor.execute(sql)
-cursor.commit()
 
 window = Tk()
 window.title('数据库系统作业')
