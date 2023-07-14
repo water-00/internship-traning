@@ -15,9 +15,7 @@ import time
 import re
 import random
 
-
 music_data = []
-
 
 def read_csv(path):
     names = []

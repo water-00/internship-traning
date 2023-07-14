@@ -1,0 +1,3 @@
+- 王浩写了基于py2neo的neo4j中的代码，实现了CRUD功能，但是为避免重复工作，对CRUD的测试没写gui，而是使用python -i neo4j_project.py进入交互模式根据提示词测试
+- 徐昕写了从 https://www.classiccat.net/ 上用爬虫获得作曲家和曲子信息的代码
+- 祝天智写了基于pymysql的mysql中的代码，实现了gui界面和CRUD功能

@@ -9,35 +9,61 @@ import py2neo
 g = Graph("bolt://localhost:7687", auth = ('neo4j','wang250188'))
 g.run('match (n) detach delete n')
 
-with open('./musicians_relationships_eng.csv', 'r', encoding='utf-8') as f:
+
+with open('./formatted_file.csv', 'r', encoding='utf-8') as f:
     reader = csv.reader(f)
     for item in reader:
         # 第一行是表格的属性
         if reader.line_num == 1:
             continue
         # print("line:", reader.line_num, "content:", item)
-        head_node = Node('Composer', name = item[0])
-        tail_node = Node('Composer', name = item[1])
+        head_node = Node('Person', name = item[0])
+        tail_node = Node('Person', name = item[1])
         relation = Relationship(head_node, item[2], tail_node)
         
-        g.merge(head_node, 'Composer', 'name')
-        g.merge(tail_node, 'Composer', 'name')
-        g.merge(relation, 'Composer', 'name')
+        g.merge(head_node, 'Person', 'name')
+        g.merge(tail_node, 'Person', 'name')
+        g.merge(relation, 'Person', 'name')
 
+with open('./composer_info.csv', 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    for item in reader:
+        if reader.line_num == 1:
+            continue
+        query = "MATCH (p:Person {name: '" + item[0] + "'})RETURN p"
+        result = g.run(query)
 
-# create(但实际上不会被用到)
-def composer_add(name, birth='', death='', country=''):
-    # 创建一个 Composer 节点
-    c = Node("Composer", name=name)
+        for record in result:
+            person_node = record["p"]
+            # person_node.clear_labels()
+            person_node.add_label("Composer")
+            person_node["birth day"] = item[1]
+            person_node["death day"] = item[2]
+            person_node["birth place"] = item[3]
+            g.push(person_node)
 
-    # 将节点添加到 Neo4j 图中
+# create
+def create_person(name):
+    c = Node("Person", name=name)
     g.create(c)
     return c
 
+def create_composer(name, birth_day, death_day, birth_place):
+    c = Node("Person", name=name)
+    c.add_label("Composer")
+    c["birth day"] = birth_day
+    c["death day"] = death_day
+    c["birth place"] = birth_place
+    g.push(c)
+    return c
 
+def create_relationship(node1, node2, relation_str):
+    relationship = Relationship(node1, relation_str, node2)
+    g.create(relationship)
+    
 # read
-def composer_query(name):
-    query = "MATCH (c:Composer)"
+def find_person(name):
+    query = "MATCH (c:Person)"
     conditions = []
     if name:
         conditions.append(f"c.name =~ '(?i).*{re.escape(name)}.*'")  # 使用模糊匹配正则表达式
@@ -47,36 +73,41 @@ def composer_query(name):
     query += " RETURN c"
 
     # 执行查询并返回结果
-    result = g.run(query).data()
-    return result
+    result = g.run(query)
+    nodes = []
+    for record in result:
+        node = record["c"]
+        nodes.append(node)
+    return nodes
 
 # update
-def composer_update(name, new_name, birth='', death='', country='', new_birth='', new_death='', new_country=''):
-    # 构建 Cypher 更新语句
-    # cypher_query = """
-    #     MATCH (c:Composer {name: $name, birth: $birth, death: $death, country: $country})
-    #     SET c.name = $new_name, c.birth = $new_birth, c.death = $new_death, c.country = $new_country
-    #     """
-    
-    
-    # 执行查询
-    # g.run(cypher_query, name=name, birth=birth, death=death, country=country,
-    #           new_name=new_name, new_birth=new_birth, new_death=new_death, new_country=new_country)
-
+def update_person(name, new_name):
     cypher_query = f"""
-        MATCH (c:Composer)
+        MATCH (c:Person)
         WHERE c.name =~ '(?i).*{re.escape(name)}.*'
         SET c.name = $new_name
         """
 
     # 执行更新
     g.run(cypher_query, new_name=new_name)
+    
+
+def update_composer(name, new_name, new_birth='', new_death='', new_birth_place=''):
+    # 构建 Cypher 更新语句
+    cypher_query = f"""
+        MATCH (c:Person)
+        WHERE c.name =~ '(?i).*{re.escape(name)}.*'
+        SET c.name = $new_name, c.`birth day` = $new_birth, c.`death day` = $new_death, c.`birth place` = $new_birth_place
+        """
+
+    # 执行更新
+    g.run(cypher_query, new_name=new_name, new_birth=new_birth, new_death=new_death, new_birth_place=new_birth_place)
 
 # delete
-def composer_delete(name, birth='', death='', country=''):
+def delete_person(name):
     # 构建 Cypher 删除语句
     cypher_query = f"""
-        MATCH (c:Composer)
+        MATCH (c:Person)
         WHERE c.name =~ '(?i).*{re.escape(name)}.*'
         OPTIONAL MATCH (c)-[r]-()
         DELETE c, r
@@ -87,10 +118,37 @@ def composer_delete(name, birth='', death='', country=''):
 
 
 # do some test
-# print(composer_query("chopin"))
+def example():
+    # update & read
+    print(find_person("chopin"))
+    update_person('chopin', 'Chopin') # give Chopin a shorter name
+    print(find_person("chopin"))
+    update_composer('chopin', 'Chopin') # replace all informations of Chopin
+    print(find_person("chopin"))
 
-# composer_update('chopin', 'XXXX')
-# print(composer_query('XXXX'))
+    # create
+    A = create_composer("Composer A", '', '', '')
+    B = create_person("Person B")
+    chopin = find_person("chopin")[0]
+    create_relationship(A, chopin, 'friend')
+    create_relationship(B, chopin, 'friend')
 
-# composer_delete('XXX')
-# print(composer_query('XXXX'))
+    # delete
+    a = A['name']; b = B['name']
+    delete_person(a)
+    delete_person(b)
+    print(find_person(a)) # delete successfully
+    print(find_person(b))
+    
+info = """
+    You can manipulate this neo4j database in the following way:
+    - create_person(name)
+    - create_composer(name, birth_day, death_day, birth_place)
+    - create_relationship(node1, node2, relation_str)
+    - find_person(name)
+    - update_person(name, new_name)
+    - update_composer(name, new_name, new_birth='', new_death='', new_birth_place='')
+    - delete_person(name)
+    or you can run example() to test all the listed function.
+"""
+print(info)
