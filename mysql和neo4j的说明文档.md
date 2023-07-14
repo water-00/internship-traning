@@ -1,24 +1,22 @@
-# music_mysql说明文档——基础部分
+# music_mysql说明文档
+
+# 基础部分
 
 ## 系统简介
 
 ⼀个简单的个⼈⾳乐收藏数据库，有查询⾳乐、查询作曲家、添加⾳乐、删除⾳乐等功能。
 
-## 功能描述
+## 功能描述（CRUD）
 
-### CRUD功能描述
-
-#### 1.删除操作
+### 1.删除操作
 
 给两个参数str1和str2（其中⼀个可以为空），如果数据库中有该参数的模糊匹配，则找到对应曲⼦
 
 **表连接涉及字段**：where opus like '%" + str1 + "%' and composer like '%" + str2 + "%
 
-##### 代码
+**代码：**
 
-``
-
-```
+```mysql
 def delete_piece():# 删除曲子界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7], minsize=50)
@@ -70,17 +68,15 @@ def cancel(frm, del_sql):# 取消执行rollback
     messagebox.showinfo(message='Deletion canceled.')
 ```
 
-#### 2.添加操作
+### 2.添加操作
 
 添加曲⼦，如果piece.composer不在composer表中，则执⾏触发器
 
 **触发器描述**：如果piece.composer不在composer表中，则执⾏触发器
 
-##### 插⼊操作源码
+**插⼊操作源码：**
 
-``
-
-```
+```mysql
 def add_piece():# 添加曲子界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], minsize=50)
@@ -113,21 +109,19 @@ def exec_add_piece(frm, opus, name, composer, album):# 添加曲子
         messagebox.showerror("error", m.args)
 ```
 
-##### 触发器源码
+**触发器源码:**
 
 `DELIMITER ;; !50003 CREATE DEFINER=`root`@`localhost`RIGGER `check_insert_piece` BEFORE INSERT ON `piece` FOR EACH ROW begin if new.composer not in (select name from composer) then signal SQLSTATE '45000' set message_text = "composer not exsits."; end if; end */;; DELIMITER ;`
 
-#### 3.更新操作
+### 3.更新操作
 
 更改piece中某⾸曲⼦的所属专辑。⽤procedure更改piece.album，要求新的piece.album在album表中。
 
 **表连接涉及字段**：album_name not in (select name from album)
 
-##### 更新代码
+**更新代码：**
 
-``
-
-```
+```mysql
 def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专辑
     tree = ttk.Treeview(master=frm)
     ls = ['Opus', 'name', 'composer', 'album', 'country']
@@ -161,9 +155,9 @@ def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专
         Button(master=frm, text="update", command=click).grid(row=8, column=0)
 ```
 
-##### 创建存储过程源码
+**创建存储过程源码：**
 
-```
+```mysql
 create procedure update_album(in opus_name varchar(20), in album_name varchar(50))
 begin
     if album_name not in (select name from album) then
@@ -175,11 +169,9 @@ begin
 end;
 ```
 
-##### 存储过程执⾏源码
+**存储过程执⾏源码：**
 
-``
-
-```
+```mysql
 def exec_update(frm, opus, new_album):# 更新专辑信息
     sql = "call update_album('" + opus + "', '" + new_album + "');"
     try:
@@ -189,17 +181,15 @@ def exec_update(frm, opus, new_album):# 更新专辑信息
         messagebox.showerror('error', m.args)
 ```
 
-#### 4.查询操作
+### 4.查询操作
 
 根据opus, name模糊匹配找到⼀⾸曲⼦。
 
 **表连接字段**：where opus like '%" + str1 + "%' and name like '%" + str2 + "%'
 
-##### 查询代码
+**查询代码：**
 
-``
-
-```
+```mysql
 def search_piece():# 曲子查找界面
     frm = Toplevel()
     frm.rowconfigure([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], minsize=50)
@@ -246,3 +236,73 @@ def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专
         click = lambda:exec_update(frm, str1, e3.get())
         Button(master=frm, text="update", command=click).grid(row=8, column=0)
 ```
+
+## 拓展部分
+
+### 1.数据来源
+
+通过[网络爬虫](https://www.classiccat.net/)，得到真实大量的古典音乐信息。
+
+如每首曲子的rank,name,opus,versions,duration,composer_name,composer_life等信息。
+
+再通过数据处理，如分词等操作，得到我们需要的与关系型数据库匹配的数据。
+
+在关系型数据库中，我们创建了piece和composer两种表，有爬虫的到的信息进行切割，得到相对应的数据。
+
+### 2.可视化程序
+
+使用python的tkinter可视化工具，实现了乐曲查询程序的可视化，同时通过Pyinstaller库将程序打包封装为exe可执行文件以方便移植。
+
+### 3.多表查询
+
+通过多表查询，将piece与composer连接，获取一首乐曲的全部信息。
+
+**查询语句**：select opus opus, piece.name name, piece.composer composer, piece.album album, composer.birthplace birthplace from piece, composer where piece.composer = composer.name;
+
+### 4.完善功能
+
+新增加了添加专辑、添加作曲家信息的界面与功能。
+
+
+
+# music_neo4j说明文档
+
+设计了一个包含许多作曲家关系的图形化数据库：
+
+<img src="md_img/graph-16893297622873.png" alt="graph" style="zoom: 67%;" />
+
+其中红色的表示有作品的作曲家，绿色的表示没有作品但是也与作曲家有联系的普通人。放大来看：
+
+<img src="md_img/image-20230714181700366.png" alt="image-20230714181700366" style="zoom:67%;" />
+
+并且也实现了CRUD功能，这里采用比较简单的在`python -i`交互模式下的测试，没有像数据库一样写一个gui：
+
+![image-20230714181853894](md_img/image-20230714181853894.png)
+
+其中`example()`的代码为：
+
+```python
+def example():
+    # update & read
+    print(find_person("chopin"))
+    update_person('chopin', 'Chopin') # give Chopin a shorter name
+    print(find_person("chopin"))
+    update_composer('chopin', 'Chopin') # replace all informations of Chopin as ''
+    print(find_person("chopin"))
+
+    # create
+    A = create_composer("Composer A", '', '', '')
+    B = create_person("Person B")
+    chopin = find_person("chopin")[0]
+    create_relationship(A, chopin, 'friend')
+    create_relationship(B, chopin, 'friend')
+
+    # delete
+    a = A['name']; b = B['name']
+    delete_person(a)
+    delete_person(b)
+    print(find_person(a)) # delete successfully
+    print(find_person(b))
+```
+
+测试了CRUD的全部函数，并且每一步在neo4j server上也有正确体现。
