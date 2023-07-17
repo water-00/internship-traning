@@ -16,7 +16,6 @@ with open('./formatted_file.csv', 'r', encoding='utf-8') as f:
         # 第一行是表格的属性
         if reader.line_num == 1:
             continue
-        # print("line:", reader.line_num, "content:", item)
         head_node = Node('Person', name = item[0])
         tail_node = Node('Person', name = item[1])
         relation = Relationship(head_node, item[2], tail_node)
@@ -35,12 +34,26 @@ with open('./composer_info.csv', 'r', encoding='utf-8') as f:
 
         for record in result:
             person_node = record["p"]
-            # person_node.clear_labels()
             person_node.add_label("Composer")
             person_node["birth day"] = item[1]
             person_node["death day"] = item[2]
             person_node["birth place"] = item[3]
             g.push(person_node)
+
+with open('./piece.csv', 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
+    for item in reader:
+        if reader.line_num == 1:
+            continue
+        piece_node = Node('Piece', opus = item[0], name = item[1], composer = item[2], type = item[3])
+        g.create(piece_node)
+        query = "MATCH (c:Composer {name: '" + item[2] + "'})RETURN c"
+        result = g.run(query)
+        
+        for record in result:
+            composer_node = record['c']  # Assuming 'c' is the variable representing the Composer node
+            relation = Relationship(composer_node, "创作", piece_node)
+            g.create(relation)
 
 # create
 def create_person(name):
