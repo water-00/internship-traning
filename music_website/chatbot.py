@@ -508,7 +508,7 @@ class ChatBotGraph:
 
 chatbot = ChatBotGraph()
 
-# Placeholder for the chatbot logic
+# 给javascript的接口函数
 def chatbot_response(question):
     print(question)
     res_classify,res = chatbot.get_query(question)
@@ -516,10 +516,21 @@ def chatbot_response(question):
     response = answer[0]
     return response
 
-# TODO test_str为系统无法回答的问题时程序会报错
+# TODO: test_str为系统无法回答的问题时程序会报错
 # test_str = "你好"
 # answer = chatbot_response(test_str)
 # print(answer[0])
+
+# TODO: 请你用json包中的json.dumps()将查询的cypher语句转换成JSON格式的字符串，例如
+"""
+{
+  "cypherString": "match(c:Composer) return c;"
+}
+"""
+def cypher_json(question):
+    return 1
+
+
 
 # questions = ["贝多芬有哪些奏鸣曲？",
 #             "贝多芬写了什么曲子？",
