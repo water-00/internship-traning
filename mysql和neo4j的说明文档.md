@@ -68,6 +68,8 @@ def cancel(frm, del_sql):# 取消执行rollback
     messagebox.showinfo(message='Deletion canceled.')
 ```
 
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714190404093.png)
+
 ### 2.添加操作
 
 添加曲⼦，如果piece.composer不在composer表中，则执⾏触发器
@@ -112,6 +114,8 @@ def exec_add_piece(frm, opus, name, composer, album):# 添加曲子
 **触发器源码:**
 
 `DELIMITER ;; !50003 CREATE DEFINER=`root`@`localhost`RIGGER `check_insert_piece` BEFORE INSERT ON `piece` FOR EACH ROW begin if new.composer not in (select name from composer) then signal SQLSTATE '45000' set message_text = "composer not exsits."; end if; end */;; DELIMITER ;`
+
+![image-20230714190654480](E:\ngit\water-00\internship-traning\md_img\image-20230714190654480.png)
 
 ### 3.更新操作
 
@@ -181,6 +185,8 @@ def exec_update(frm, opus, new_album):# 更新专辑信息
         messagebox.showerror('error', m.args)
 ```
 
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714190756698.png)
+
 ### 4.查询操作
 
 根据opus, name模糊匹配找到⼀⾸曲⼦。
@@ -237,6 +243,8 @@ def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专
         Button(master=frm, text="update", command=click).grid(row=8, column=0)
 ```
 
+![image-20230714190817754](E:\ngit\water-00\internship-traning\md_img\image-20230714190817754.png)
+
 ## 拓展部分
 
 ### 1.数据来源
@@ -249,9 +257,13 @@ def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专
 
 在关系型数据库中，我们创建了piece和composer两种表，有爬虫的到的信息进行切割，得到相对应的数据。
 
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714191201106.png)
+
 ### 2.可视化程序
 
 使用python的tkinter可视化工具，实现了乐曲查询程序的可视化，同时通过Pyinstaller库将程序打包封装为exe可执行文件以方便移植。
+
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714191350924.png)
 
 ### 3.多表查询
 
@@ -263,7 +275,11 @@ def exec_search_piece(frm, str1, str2):# 曲子查找结果展示以及更新专
 
 新增加了添加专辑、添加作曲家信息的界面与功能。
 
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714202408528.png)
 
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714202423640.png)
+
+![](E:\ngit\water-00\internship-traning\md_img\image-20230714202435829.png)
 
 # music_neo4j说明文档
 
