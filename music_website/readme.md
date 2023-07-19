@@ -23,4 +23,4 @@ python app.py
 
 `Ctrl+Click http://127.0.0.1:5000`这个域名即可
 
-在`app.py`中搜索TODO找到要解决的问题
+在`chatbot.py`中搜索TODO找到要解决的问题
