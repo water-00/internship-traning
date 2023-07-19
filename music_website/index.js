@@ -104,7 +104,7 @@ const submitQuery = () => {
                 updateGraph(Object.values(nodeItemMap), Object.values(linkItemMap));
             });
     } else {
-        // 选中question的情况
+        // 选中question mode的情况
         outputString = `对不起，我还不知道关于"${inputString}"的内容`;
     }
 
