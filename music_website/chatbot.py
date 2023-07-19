@@ -516,9 +516,10 @@ def chatbot_response(question):
     response = answer[0]
     return response
 
-test_str = "你好"
-answer = chatbot_response(test_str)
-print(answer[0])
+# TODO test_str为系统无法回答的问题时程序会报错
+# test_str = "你好"
+# answer = chatbot_response(test_str)
+# print(answer[0])
 
 # questions = ["贝多芬有哪些奏鸣曲？",
 #             "贝多芬写了什么曲子？",
