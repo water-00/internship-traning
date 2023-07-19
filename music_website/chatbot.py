@@ -521,14 +521,10 @@ def chatbot_response(question):
 # answer = chatbot_response(test_str)
 # print(answer[0])
 
-# TODO: 请你用json包中的json.dumps()将查询的cypher语句转换成JSON格式的字符串，例如
-"""
-{
-  "cypherString": "match(c:Composer) return c;"
-}
-"""
+# TODO: 写一个返回查询question的cypher语句的函数
 def cypher_json(question):
-    return 1
+    cypherString = ""
+    return cypherString
 
 
 
