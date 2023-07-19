@@ -1,0 +1,26 @@
+head,tail,relationship,type
+Johann Sebastian Bach,Carl Philipp Emanuel Bach,父亲,single
+Carl Philipp Emanuel Bach,Johann Georg Leopold Mozart,好友,bidirectional
+Johann Georg Leopold Mozart,Wolfgang Amadeus Mozart,父亲,single
+Johann Georg Leopold Mozart,Antonio Salieri,好友,bidirectional
+Antonio Salieri,Wolfgang Amadeus Mozart,老师,single
+Antonio Salieri,Franz Schubert,老师,single
+Antonio Salieri,Ludwig van Beethoven,老师,single
+Franz Joseph Haydn,Ludwig van Beethoven,老师,single
+Franz Joseph Haydn,Wolfgang Amadeus Mozart,老师,single
+Ludwig van Beethoven,Carl Czerny,老师,single
+Muzio Clementi,Ludwig van Beethoven,好友、出版商,single
+Carl Czerny,Franz Liszt,老师,single
+Franz Liszt,Richard Wagner,女婿,single
+Richard Wagner,Frédéric Chopin,好友,bidirectional
+Frédéric Chopin,Anton Rubinstein,好友,bidirectional
+Franz Liszt,Felix Mendelssohn-Bartholdy,好友,bidirectional
+Felix Mendelssohn-Bartholdy,Robert Schumann,好友、合伙人,bidirectional
+Felix Mendelssohn-Bartholdy,Heinrich Wilhelm Ernst,好友,bidirectional
+Robert Schumann,Clara Schumann,夫妻,bidirectional
+Robert Schumann,Johannes Brahms,老师,single
+Johannes Brahms,Clara Schumann,暗恋,bidirectional
+Heinrich Wilhelm Ernst,Niccolò Paganini,好友,bidirectional
+Anton Rubinstein,Pyotr Ilyich Tchaikovsky,老师,single
+Pyotr Ilyich Tchaikovsky,Nadezhda von Meck,至交,bidirectional
+Nadezhda von Meck,Claude Debussy,雇主,single

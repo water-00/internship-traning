@@ -53,7 +53,6 @@ def get_info(url):  # 提取每一个作曲家页面的曲目信息（动态页�
     # 网页不存在
     if "Error" in driver.title:
         print(f"url不存在: {url}")
-        error_links.append(url)
         return
     # 使用XPath定位链接文本的元素
     link_element = driver.find_element(By.XPATH, '//*[@id="div1"]/table/tbody/tr[1]/td[1]/a[4]/b')
