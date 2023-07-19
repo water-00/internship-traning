@@ -523,7 +523,7 @@ def chatbot_response(question):
 
 # TODO: 写一个返回查询question的cypher语句的函数
 def cypher_json(question):
-    cypherString = ""
+    cypherString = "match (c:Composer) return c;"
     return cypherString
 
 

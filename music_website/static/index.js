@@ -7,7 +7,6 @@ const neo4jPassword = "wang250188"
 const circleSize = 30
 const arrowHeight = 5
 const arrowWidth = 5
-var errorFlag = false
 
 // 判断是否以中英文开头
 const isChineseStart = str => /^[\u4e00-\u9fff]/.test(str);
@@ -19,11 +18,68 @@ const labelColorMap = {
     'Piece': '#6df1a9',
 };
 
-const submitQuery = () => {
+
+const executeCypherQuery = (inputString) => {
     // Create new, empty objects to hold the nodes and relationships returned by the query results
     let nodeItemMap = {}
     let linkItemMap = {}
 
+    // make POST request with auth headers
+    let response = fetch(neo4j_http_url, {
+        method: 'POST',
+        // authentication using the username and password of the user in Neo4j
+        headers: {
+            "Authorization": "Basic " + btoa(`${neo4jUsername}:${neo4jPassword}`),
+            "Content-Type": "application/json",
+            "Accept": "application/json;charset=UTF-8",
+        },
+        // Formatted request for Neo4j's Cypher Transaction API with generated query included
+        // https://neo4j.com/docs/http-api/current/actions/query-format/
+        // generated query is formatted to be valid JSON for insertion into request body
+        body: '{"statements":[{"statement":"' + inputString.replace(/(\r\n|\n|\r)/gm, "\\n").replace(/"/g, '\\"') + '", "resultDataContents":["graph", "row"]}]}'
+    })
+        .then(res => res.json())
+        .then(data => { // usable data from response JSON
+            // 如果cypher查询没有查到，输出错误信息
+            if (data.errors != null && data.errors.length > 0 && inputString.length > 0) {
+                alert(`Error:${data.errors[0].message}(${data.errors[0].code})`);
+                return;
+            }
+
+            // 如果cypher查询找到了，则绘制图
+            if (data.results != null && data.results.length > 0 && data.results[0].data != null && data.results[0].data.length > 0) {
+                let neo4jDataItmArray = data.results[0].data;
+                neo4jDataItmArray.forEach(function (dataItem) { // iterate through all items in the embedded 'results' element returned from Neo4j, https://neo4j.com/docs/http-api/current/actions/result-format/
+                    //Node
+                    if (dataItem.graph.nodes != null && dataItem.graph.nodes.length > 0) {
+                        let neo4jNodeItmArray = dataItem.graph.nodes; // all nodes present in the results item
+                        neo4jNodeItmArray.forEach(function (nodeItm) {
+                            if (!(nodeItm.id in nodeItemMap)) // if node is not yet present, create new entry in nodeItemMap whose key is the node ID and value is the node itself
+                                nodeItemMap[nodeItm.id] = nodeItm;
+                        });
+                    }
+                    //Link, interchangeably called a relationship
+                    if (dataItem.graph.relationships != null && dataItem.graph.relationships.length > 0) {
+                        let neo4jLinkItmArray = dataItem.graph.relationships; // all relationships present in the results item
+                        neo4jLinkItmArray.forEach(function (linkItm) {
+                            if (!(linkItm.id in linkItemMap)) { // if link is not yet present, create new entry in linkItemMap whose key is the link ID and value is the link itself
+                                // D3 force layout graph uses 'startNode' and 'endNode' to determine link start/end points, these are called 'source' and 'target' in JSON results from Neo4j
+                                linkItm.source = linkItm.startNode;
+                                linkItm.target = linkItm.endNode;
+                                linkItemMap[linkItm.id] = linkItm;
+                            }
+                        });
+                    }
+                });
+            }
+
+            // update the D3 force layout graph with the properly formatted lists of nodes and links from Neo4j
+            updateGraph(Object.values(nodeItemMap), Object.values(linkItemMap));
+        });
+
+}
+
+const submitQuery = () => {
     // contents of the query text field
     let inputString = document.querySelector('#queryContainer').value;
     let outputString = "Answer";
@@ -43,72 +99,15 @@ const submitQuery = () => {
 
     // 选中cypher mode的情况
     if (cypherModeRadio.checked) {
-        // make POST request with auth headers
-        let response = fetch(neo4j_http_url, {
-            method: 'POST',
-            // authentication using the username and password of the user in Neo4j
-            headers: {
-                "Authorization": "Basic " + btoa(`${neo4jUsername}:${neo4jPassword}`),
-                "Content-Type": "application/json",
-                "Accept": "application/json;charset=UTF-8",
-            },
-            // Formatted request for Neo4j's Cypher Transaction API with generated query included
-            // https://neo4j.com/docs/http-api/current/actions/query-format/
-            // generated query is formatted to be valid JSON for insertion into request body
-            body: '{"statements":[{"statement":"' + inputString.replace(/(\r\n|\n|\r)/gm, "\\n").replace(/"/g, '\\"') + '", "resultDataContents":["graph", "row"]}]}'
-        })
-            .then(res => res.json())
-            .then(data => { // usable data from response JSON
-                // 如果cypher查询没有查到，输出错误信息
-                if (data.errors != null && data.errors.length > 0 && inputString.length > 0) {
-                    alert(`Error:${data.errors[0].message}(${data.errors[0].code})`);
-                    errorFlag = true;
-                    // submitQuery();
-                    return;
-                }
-
-                // 如果cypher查询找到了，则绘制图
-                if (data.results != null && data.results.length > 0 && data.results[0].data != null && data.results[0].data.length > 0) {
-                    if (!errorFlag) {
-                        let questionResult = "Answer";
-                        let answerInput = document.getElementById("answerContainer");
-                        answerInput.value = questionResult;
-                    }
-                    let neo4jDataItmArray = data.results[0].data;
-                    neo4jDataItmArray.forEach(function (dataItem) { // iterate through all items in the embedded 'results' element returned from Neo4j, https://neo4j.com/docs/http-api/current/actions/result-format/
-                        //Node
-                        if (dataItem.graph.nodes != null && dataItem.graph.nodes.length > 0) {
-                            let neo4jNodeItmArray = dataItem.graph.nodes; // all nodes present in the results item
-                            neo4jNodeItmArray.forEach(function (nodeItm) {
-                                if (!(nodeItm.id in nodeItemMap)) // if node is not yet present, create new entry in nodeItemMap whose key is the node ID and value is the node itself
-                                    nodeItemMap[nodeItm.id] = nodeItm;
-                            });
-                        }
-                        //Link, interchangeably called a relationship
-                        if (dataItem.graph.relationships != null && dataItem.graph.relationships.length > 0) {
-                            let neo4jLinkItmArray = dataItem.graph.relationships; // all relationships present in the results item
-                            neo4jLinkItmArray.forEach(function (linkItm) {
-                                if (!(linkItm.id in linkItemMap)) { // if link is not yet present, create new entry in linkItemMap whose key is the link ID and value is the link itself
-                                    // D3 force layout graph uses 'startNode' and 'endNode' to determine link start/end points, these are called 'source' and 'target' in JSON results from Neo4j
-                                    linkItm.source = linkItm.startNode;
-                                    linkItm.target = linkItm.endNode;
-                                    linkItemMap[linkItm.id] = linkItm;
-                                }
-                            });
-                        }
-                    });
-                    errorFlag = false;
-                    let answerInput = document.getElementById("answerContainer");
-                    answerInput.value = outputString;
-                }
-
-                // update the D3 force layout graph with the properly formatted lists of nodes and links from Neo4j
-                updateGraph(Object.values(nodeItemMap), Object.values(linkItemMap));
-            });
+        executeCypherQuery(inputString)
+        let answerInput = document.getElementById('answerContainer');
+        answerInput.value = 'Answer';
     } else {
         // 选中question mode的情况
         if (questionModeRadio.checked) {
-            // Make an API request to the Python backend
+            // 通过API调用python后端，得到outputString和查询cypher
+
+            // 获取回答
             fetch('http://localhost:5000/chatbot', {
                 method: 'POST',
                 headers: {
@@ -119,9 +118,28 @@ const submitQuery = () => {
                 .then(response => response.json())
                 .then(data => {
                     // Update outputString with the chatbot response
-                    let outputString = data.outputString;
+                    outputString = data.outputString;
                     let answerInput = document.getElementById('answerContainer');
                     answerInput.value = outputString;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            
+            // 获取cypher语句
+            let cypherString = ""
+            fetch('http://localhost:5000/cypher', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'inputString': inputString }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Update outputString with the chatbot response
+                    let cypherString = data.cypherString;
+                    executeCypherQuery(cypherString)
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -129,6 +147,13 @@ const submitQuery = () => {
         }
     }
 }
+
+
+
+
+
+
+
 
 // create a new D3 force simulation with the nodes and links returned from a query to Neo4j for display on the canvas element
 const updateGraph = (nodes, links) => {
