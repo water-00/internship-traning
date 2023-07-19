@@ -13,7 +13,7 @@ pip install flask
 pip install flask_cors
 ```
 
-然后修改`app.py`中的密码（可以用搜索"wang250188"找到密码所在位置），然后
+然后修改`app.py`中的密码（可以用搜索"auth="找到密码所在位置），然后
 
 ```
 python app.py
