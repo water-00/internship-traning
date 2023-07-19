@@ -98,6 +98,8 @@ const submitQuery = () => {
                         }
                     });
                     errorFlag = false;
+                    let answerInput = document.getElementById("answerContainer");
+                    answerInput.value = outputString;
                 }
 
                 // update the D3 force layout graph with the properly formatted lists of nodes and links from Neo4j
@@ -105,11 +107,27 @@ const submitQuery = () => {
             });
     } else {
         // 选中question mode的情况
-        outputString = `对不起，我还不知道关于"${inputString}"的内容`;
+        if (questionModeRadio.checked) {
+            // Make an API request to the Python backend
+            fetch('http://localhost:5000/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'inputString': inputString }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Update outputString with the chatbot response
+                    let outputString = data.outputString;
+                    let answerInput = document.getElementById('answerContainer');
+                    answerInput.value = outputString;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     }
-
-    let answerInput = document.getElementById("answerContainer");
-    answerInput.value = outputString;
 }
 
 // create a new D3 force simulation with the nodes and links returned from a query to Neo4j for display on the canvas element

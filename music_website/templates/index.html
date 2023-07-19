@@ -13,7 +13,8 @@
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 
     <!-- Our D3.js code -->
-    <script type="text/javascript" src="index.js"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+    
 
     <style>
         #zoomButtons {
@@ -55,7 +56,7 @@
         <h5 class="text-muted mb-4">Enter Your Query or Question</h5>
         <input class="form-control mb-3" placeholder="Cypher query" id="queryContainer"
             onkeydown="handleKeyPress(event)">
-        <input class="form-control mb-3" placeholder="Answer" id="answerContainer">
+        <textarea class="form-control mb-3" placeholder="Answer" id="answerContainer" rows="5"></textarea>
 
         <div class="radio-button-container">
             <div>

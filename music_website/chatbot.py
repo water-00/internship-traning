@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 import os
 import csv
@@ -232,9 +230,6 @@ class QuestionClassifier:
         return False
 
 
-# In[2]:
-
-
 '''根据问题类别生成查询语句'''
 class QuestionPaser:
 
@@ -369,13 +364,11 @@ class QuestionPaser:
         return sql
 
 
-# In[3]:
-
 
 '''生成回答'''
 class AnswerSearcher:
     def __init__(self):
-        self.g = Graph("bolt: // localhost:7687", auth=("neo4j", "12345678"))
+        self.g = Graph("bolt: // localhost:7687", auth=("neo4j", "wang250188"))
 
     '''执行cypher查询，并返回相应结果'''
     def search_main(self, sqls,question):
@@ -496,9 +489,6 @@ class AnswerSearcher:
         return final_answer
 
 
-# In[4]:
-
-
 # 问答机器人主体
 class ChatBotGraph:
     def __init__(self):
@@ -516,52 +506,43 @@ class ChatBotGraph:
         return final_answers
 
 
-# In[5]:
-
-
 chatbot = ChatBotGraph()
-questions = ["贝多芬有哪些奏鸣曲？",
-            "贝多芬写了什么曲子？",
-            "推荐一些贝多芬和肖邦的协奏曲",
-            "有没有舒伯特的曲子？",
-            "李斯特的舞曲和协奏曲",
-            "莫扎特",
-            "贝多芬是谁的老师？",
-            "贝多芬的老师是谁？",
-            "谁是贝多芬的老师？",
-            "贝多芬的人际关系",
-            "贝多芬、莫扎特和安东尼奥·萨列里是什么关系？",
-            "贝多芬的老师和朋友都有谁？",
-            "肖邦的朋友",
-            "舒曼和谁有关系？",
-            "柴可夫斯基和舒伯特在哪里出生？",
-            "贝多芬于哪一年逝世？",
-            "我想了解贝多芬的相关信息"]
-for question in questions:
-    print('================='+question+'======================')
+
+# Placeholder for the chatbot logic
+def chatbot_response(question):
+    print(question)
     res_classify,res = chatbot.get_query(question)
-    print("查询语句：")
-    print(res[0]['sql'])
-    #print(res)
     answer = chatbot.get_answer(res,question)
-    print("输出回答：")
-    print(answer[0])
+    response = answer[0]
+    return response
 
+test_str = "你好"
+answer = chatbot_response(test_str)
+print(answer[0])
 
-# In[6]:
-
-
-# question = input()
-# res_classify,res = chatbot.get_query(question)
-# print("查询语句：")
-# print(res[0]['sql'])
-# answer = chatbot.get_answer(res,question)
-# print("输出回答：")
-# print(answer[0])
-
-
-# In[ ]:
-
-
-
-
+# questions = ["贝多芬有哪些奏鸣曲？",
+#             "贝多芬写了什么曲子？",
+#             "推荐一些贝多芬和肖邦的协奏曲",
+#             "有没有舒伯特的曲子？",
+#             "李斯特的舞曲和协奏曲",
+#             "莫扎特",
+#             "贝多芬是谁的老师？",
+#             "贝多芬的老师是谁？",
+#             "谁是贝多芬的老师？",
+#             "贝多芬的人际关系",
+#             "贝多芬、莫扎特和安东尼奥·萨列里是什么关系？",
+#             "贝多芬的老师和朋友都有谁？",
+#             "肖邦的朋友",
+#             "舒曼和谁有关系？",
+#             "柴可夫斯基和舒伯特在哪里出生？",
+#             "贝多芬于哪一年逝世？",
+#             "我想了解贝多芬的相关信息"]
+# for question in questions:
+#     print('================='+question+'======================')
+#     res_classify,res = chatbot.get_query(question)
+#     print("查询语句：")
+#     print(res[0]['sql'])
+#     #print(res)
+#     answer = chatbot.get_answer(res,question)
+#     print("输出回答：")
+#     print(answer[0])
