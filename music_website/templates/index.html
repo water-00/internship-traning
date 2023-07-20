@@ -14,9 +14,38 @@
 
     <!-- Our D3.js code -->
     <script src="{{ url_for('static', filename='index.js') }}"></script>
-    
+
 
     <style>
+        #music {
+            position: absolute;
+            top: 20px;
+            right: 55px;
+            width: 40px;
+            height: 40px;
+            background-image: url("/static/treble_clef.png");
+            /* Set the background to the treble clef image */
+            background-size: cover;
+            /* Adjust image size to cover the circle */
+            background-repeat: no-repeat;
+            /* Prevent repeating the image */
+            background-color: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            /* 将鼠标指针样式设置为点击手型 */
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(calc(360deg + var(--rotation-angle, 0deg)));
+                /* Use the --rotation-angle variable */
+            }
+        }
+
         #zoomButtons {
             position: fixed;
             right: 20px;
@@ -37,7 +66,7 @@
         .radio-button-container {
             display: flex;
             flex-direction: row;
-            gap: 20px;
+            gap: 30px;
             align-items: center;
         }
 
@@ -47,40 +76,101 @@
             gap: 2px;
             align-items: flex-start;
         }
+
+        /* 添加表格样式 */
+        #nodeInfo table {
+            border-collapse: collapse;
+            /* 合并表格边框 */
+            border: 1px solid #ccc;
+            /* 添加表格边框 */
+            width: 300px;
+            /* 设置表格宽度 */
+        }
+
+        #nodeInfo th,
+        #nodeInfo td {
+            padding: 8px;
+            /* 设置单元格内边距 */
+            border: 1px solid #ccc;
+            /* 添加单元格边框 */
+            text-align: left;
+            /* 文本左对齐 */
+        }
+
+        #nodeInfo th {
+            background-color: #f2f2f2;
+            /* 设置表头背景颜色 */
+        }
     </style>
 </head>
 
 <body class="align-center bg-light" onload="responsiveCanvasSizer()">
-    <div class="container-fluid m-4 shadow p-4 w-75">
 
-        <h5 class="text-muted mb-4">Enter Your Query or Question</h5>
-        <input class="form-control mb-3" placeholder="Cypher query" id="queryContainer"
-            onkeydown="handleKeyPress(event)">
-        <textarea class="form-control mb-3" placeholder="Answer" id="answerContainer" rows="5"></textarea>
+    <div class="radio-button-container">
+        <div class="container-fluid m-4 shadow p-4 w-50">
 
-        <div class="radio-button-container">
-            <div>
-                <button class="btn btn-secondary" onclick="submitQuery()">Run</button>
-            </div>
-            <div class="radio-container">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="queryMode" id="cypherMode" value="cypher" checked>
-                    <label class="form-check-label" for="cypherMode">
-                        Cypher mode
-                    </label>
+            <h5 class="text-muted mb-4">Enter Your Query or Question</h5>
+
+            <input class="form-control mb-3" placeholder="Cypher query" id="queryContainer"
+                onkeydown="handleKeyPress(event)">
+            <textarea class="form-control mb-3" placeholder="Answer" id="answerContainer" rows="5"></textarea>
+
+            <div class="radio-button-container">
+                <div>
+                    <button class="btn btn-secondary" onclick="submitQuery()">Run</button>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="queryMode" id="questionMode" value="question">
-                    <label class="form-check-label" for="questionMode">
-                        Question mode
-                    </label>
+                <div class="radio-container">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="queryMode" id="cypherMode" value="cypher"
+                            checked>
+                        <label class="form-check-label" for="cypherMode">
+                            Cypher mode
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="queryMode" id="questionMode"
+                            value="question">
+                        <label class="form-check-label" for="questionMode">
+                            Question mode
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <div class="col">
+            <p>您可以以这样的方式提问：</p>
+            <ul>
+                <li>贝多芬有哪些奏鸣曲？</li>
+                <li>李斯特写了什么曲子？</li>
+                <li>推荐一些贝多芬和肖邦的协奏曲</li>
+                <li>有没有舒伯特的曲子？</li>
+                <li>莫扎特</li>
+                <li>贝多芬是谁的老师？</li>
+                <li>谁是贝多芬的老师？</li>
+                <li>贝多芬、莫扎特和安东尼奥·萨列里是什么关系？</li>
+                <li>肖邦的朋友</li>
+                <li>舒曼和谁有关系？</li>
+                <li>柴可夫斯基和舒伯特在哪里出生？</li>
+                <li>贝多芬于哪一年逝世？</li>
+                <li>我想了解贝多芬的相关信息</li>
+            </ul>
+        </div>
+
+        <!-- 添加背景音乐 -->
+        <div id="music" class="music-icon"></div>
+        <audio id="audio" autoplay loop>
+            <source src="/static/music.mp3" type="audio/mpeg">
+            <!-- If the browser doesn't support the audio element, provide a fallback message -->
+            Your browser does not support the audio element.
+        </audio>
+
+        <div id="nodeInfo" style="position: absolute; align-items: center; right: 60px;"></div>
 
     </div>
-    <div class="container-fluid m-0">
+
+
+    <div class="container-fluid m-0 ">
         <div class="row">
             <div class="col border border-3">
                 <!-- the canvas element where the graph is drawn -->
@@ -96,6 +186,29 @@
             }
         }
     </script>
+
+    <script>
+        const music = document.getElementById('music');
+        const audio = document.getElementById('audio');
+        let isPlaying = false;
+        let rotationAngle = 0; // Variable to store the current rotation angle
+
+        music.addEventListener('click', () => {
+            if (!isPlaying) {
+                audio.play();
+                isPlaying = true;
+                music.style.animation = `rotate 5s linear infinite`;
+                music.style.animationPlayState = 'running'; // Start rotation animation
+            } else {
+                audio.pause();
+                isPlaying = false;
+                const computedStyle = getComputedStyle(music);
+                rotationAngle = parseFloat(computedStyle.getPropertyValue('transform').split(',')[1]);
+                music.style.animationPlayState = 'paused'; // Pause rotation animation
+            }
+        });
+    </script>
+
 
     <div id="zoomButtons">
         <button id="zoomInButton" onclick="">+</button>

@@ -149,12 +149,6 @@ const submitQuery = () => {
 }
 
 
-
-
-
-
-
-
 // create a new D3 force simulation with the nodes and links returned from a query to Neo4j for display on the canvas element
 const updateGraph = (nodes, links) => {
     const canvas = document.querySelector('canvas');
@@ -260,22 +254,68 @@ const updateGraph = (nodes, links) => {
             context.fillStyle = nodeColor;
             context.fill();
 
-            context.textAlign = "center"
-            context.textBaseline = "middle"
+            context.textAlign = "center";
+            context.textBaseline = "middle";
 
-            // Draws the appropriate text on the node
-            context.strokeText(d.properties.name || d.properties.title, d.x, d.y)
+            // Draws the appropriate text on the node with a larger font size
+            const fontSize = 16; // 设置所需的字体大小
+            context.font = `${fontSize}px Arial`; // 设置字体和大小
+            context.fillStyle = '#000'; // 设置文本颜色
+            context.fillText(d.properties.name || d.properties.title, d.x, d.y);
+
             context.closePath();
             context.stroke();
         });
+
         context.restore();
+
+        // 在 simulationUpdate() 函数中添加鼠标悬停事件监听
+        canvas.addEventListener('mousemove', function (event) {
+            const mouseX = event.offsetX / transform.k - transform.x - xOffset;
+            const mouseY = event.offsetY / transform.k - transform.y - yOffset;
+
+            // 寻找鼠标所在的节点
+            const hoveredNode = findNodeAtPosition(mouseX, mouseY);
+
+            // 显示节点属性信息
+            showNodeInfo(hoveredNode);
+        });
+
+        // 定义寻找鼠标所在节点的函数
+        function findNodeAtPosition(x, y) {
+            return nodes.find(function (node) {
+                const dx = x - node.x;
+                const dy = y - node.y;
+                return Math.sqrt(dx * dx + dy * dy) <= circleSize;
+            });
+        }
+
+        // 定义显示节点属性信息的函数
+        function showNodeInfo(node) {
+            const nodeInfoDiv = document.getElementById('nodeInfo');
+            if (node) {
+                // 构建节点属性信息的表格内容
+                let tableHTML = '<table>';
+                for (const key in node.properties) {
+                    tableHTML += `<tr><td>${key}</td><td>${node.properties[key]}</td></tr>`;
+                }
+                tableHTML += '</table>';
+
+                // 显示表格内容
+                nodeInfoDiv.innerHTML = tableHTML;
+            } else {
+                // 鼠标未悬停在节点上，清空表格内容
+                nodeInfoDiv.innerHTML = '';
+            }
+        }
+
     }
 }
 function responsiveCanvasSizer() {
     const canvas = document.querySelector('canvas')
     const rect = canvas.getBoundingClientRect()
     // ratio of the resolution in physical pixels to the resolution in CSS pixels
-    const dpr = window.devicePixelRatio * 2.5
+    const dpr = window.devicePixelRatio * 1
 
     // Set the "actual" size of the canvas
     canvas.width = rect.width * dpr
