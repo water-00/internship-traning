@@ -368,7 +368,7 @@ class QuestionPaser:
 '''生成回答'''
 class AnswerSearcher:
     def __init__(self):
-        self.g = Graph("bolt: // localhost:7687", auth=("neo4j", "wang250188"))
+        self.g = Graph("bolt: // localhost:7687", auth=("neo4j", "12345678"), name="neo4j")
 
     '''执行cypher查询，并返回相应结果'''
     def search_main(self, sqls,question):

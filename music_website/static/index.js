@@ -1,7 +1,7 @@
 // Neo4j HTTP endpoint for Cypher transaction API
 const neo4j_http_url = "http://localhost:7474/db/neo4j/tx"
 const neo4jUsername = "neo4j"
-const neo4jPassword = "wang250188"
+const neo4jPassword = "122345678"
 
 // used for drawing nodes and arrows later on
 const circleSize = 30
