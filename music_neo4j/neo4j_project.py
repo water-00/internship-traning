@@ -6,7 +6,7 @@ import py2neo
 # py2neo version = 2021.2.3
 # neo4j community version = 5.9
 
-g = Graph("bolt://localhost:7687", auth = ('neo4j','12345678'))
+g = Graph("bolt://localhost:7687", auth = ('neo4j','wang250188'))
 g.run('match (n) detach delete n')
 
 

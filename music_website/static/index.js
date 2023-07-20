@@ -1,7 +1,7 @@
 // Neo4j HTTP endpoint for Cypher transaction API
 const neo4j_http_url = "http://localhost:7474/db/neo4j/tx"
 const neo4jUsername = "neo4j"
-const neo4jPassword = "122345678"
+const neo4jPassword = "wang250188"
 
 // used for drawing nodes and arrows later on
 const circleSize = 30
@@ -20,26 +20,23 @@ const labelColorMap = {
 
 
 const executeCypherQuery = (inputString) => {
-    // Create new, empty objects to hold the nodes and relationships returned by the query results
     let nodeItemMap = {}
     let linkItemMap = {}
 
-    // make POST request with auth headers
+    // 创建POST请求
     let response = fetch(neo4j_http_url, {
         method: 'POST',
-        // authentication using the username and password of the user in Neo4j
         headers: {
             "Authorization": "Basic " + btoa(`${neo4jUsername}:${neo4jPassword}`),
             "Content-Type": "application/json",
             "Accept": "application/json;charset=UTF-8",
         },
-        // Formatted request for Neo4j's Cypher Transaction API with generated query included
+
         // https://neo4j.com/docs/http-api/current/actions/query-format/
-        // generated query is formatted to be valid JSON for insertion into request body
         body: '{"statements":[{"statement":"' + inputString.replace(/(\r\n|\n|\r)/gm, "\\n").replace(/"/g, '\\"') + '", "resultDataContents":["graph", "row"]}]}'
     })
         .then(res => res.json())
-        .then(data => { // usable data from response JSON
+        .then(data => {
             // 如果cypher查询没有查到，输出错误信息
             if (data.errors != null && data.errors.length > 0 && inputString.length > 0) {
                 alert(`Error:${data.errors[0].message}(${data.errors[0].code})`);
@@ -49,20 +46,22 @@ const executeCypherQuery = (inputString) => {
             // 如果cypher查询找到了，则绘制图
             if (data.results != null && data.results.length > 0 && data.results[0].data != null && data.results[0].data.length > 0) {
                 let neo4jDataItmArray = data.results[0].data;
-                neo4jDataItmArray.forEach(function (dataItem) { // iterate through all items in the embedded 'results' element returned from Neo4j, https://neo4j.com/docs/http-api/current/actions/result-format/
-                    //Node
+
+                // 遍历&绘制所有返回的信息
+                neo4jDataItmArray.forEach(function (dataItem) {
+                    // Node
                     if (dataItem.graph.nodes != null && dataItem.graph.nodes.length > 0) {
-                        let neo4jNodeItmArray = dataItem.graph.nodes; // all nodes present in the results item
+                        let neo4jNodeItmArray = dataItem.graph.nodes; // 提取nodes
                         neo4jNodeItmArray.forEach(function (nodeItm) {
-                            if (!(nodeItm.id in nodeItemMap)) // if node is not yet present, create new entry in nodeItemMap whose key is the node ID and value is the node itself
+                            if (!(nodeItm.id in nodeItemMap)) // 对每个node建立和nodeItemMap的映射关系
                                 nodeItemMap[nodeItm.id] = nodeItm;
                         });
                     }
-                    //Link, interchangeably called a relationship
+                    // Link
                     if (dataItem.graph.relationships != null && dataItem.graph.relationships.length > 0) {
-                        let neo4jLinkItmArray = dataItem.graph.relationships; // all relationships present in the results item
+                        let neo4jLinkItmArray = dataItem.graph.relationships; // 提取links
                         neo4jLinkItmArray.forEach(function (linkItm) {
-                            if (!(linkItm.id in linkItemMap)) { // if link is not yet present, create new entry in linkItemMap whose key is the link ID and value is the link itself
+                            if (!(linkItm.id in linkItemMap)) { // 对每个link建立和linkItemMap的映射关系
                                 // D3 force layout graph uses 'startNode' and 'endNode' to determine link start/end points, these are called 'source' and 'target' in JSON results from Neo4j
                                 linkItm.source = linkItm.startNode;
                                 linkItm.target = linkItm.endNode;
@@ -73,7 +72,7 @@ const executeCypherQuery = (inputString) => {
                 });
             }
 
-            // update the D3 force layout graph with the properly formatted lists of nodes and links from Neo4j
+            // 将formatted lists of nodes and links丢给绘制函数
             updateGraph(Object.values(nodeItemMap), Object.values(linkItemMap));
         });
 
@@ -149,7 +148,6 @@ const submitQuery = () => {
 }
 
 
-// create a new D3 force simulation with the nodes and links returned from a query to Neo4j for display on the canvas element
 const updateGraph = (nodes, links) => {
     const canvas = document.querySelector('canvas');
     const width = canvas.width;
@@ -174,7 +172,7 @@ const updateGraph = (nodes, links) => {
         simulationUpdate();
     });
 
-    // This object sets the force between links and instructs the below simulation to use the links provided from query results, 
+    // 定义LinkForce
     // https://github.com/d3/d3-force#links
     const d3LinkForce = d3.forceLink()
         .distance(50)
@@ -184,15 +182,13 @@ const updateGraph = (nodes, links) => {
             return d.id;
         });
 
-    /*
-    This defines a new D3 Force Simulation which controls the physical behavior of how nodes and links interact.
-    https://github.com/d3/d3-force#simulation
-    */
+    // 设定D3库中link和node的碰撞过程中的力
+    // https://github.com/d3/d3-force#simulation
     let simulation = new d3.forceSimulation()
         .force('chargeForce', d3.forceManyBody().strength())
         .force('collideForce', d3.forceCollide(circleSize * 3))
 
-    // Here, the simulation is instructed to use the nodes returned from the query results and to render links using the force defined above
+    // 将定义好的linkForce添加到碰撞过程中
     simulation
         .nodes(nodes)
         .force("linkForce", d3LinkForce)
@@ -206,7 +202,7 @@ const updateGraph = (nodes, links) => {
         simulationUpdate();
     }
 
-    //The canvas is cleared and then instructed to draw each node and link with updated locations per the physical force simulation.
+    // 每次力模拟后更新node和link的位置
     function simulationUpdate() {
         const xOffset = width / 2;
         const yOffset = height / 4;
@@ -314,14 +310,15 @@ const updateGraph = (nodes, links) => {
 function responsiveCanvasSizer() {
     const canvas = document.querySelector('canvas')
     const rect = canvas.getBoundingClientRect()
-    // ratio of the resolution in physical pixels to the resolution in CSS pixels
+
+    // 像素密度
     const dpr = window.devicePixelRatio * 1
 
-    // Set the "actual" size of the canvas
+    // 实际屏幕尺寸
     canvas.width = rect.width * dpr
     canvas.height = rect.height * dpr
 
-    // Set the "drawn" size of the canvas
+    // 画布尺寸
     canvas.style.width = `${rect.width}px`
     canvas.style.height = `${rect.height}px`
     submitQuery();
