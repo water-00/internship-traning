@@ -386,12 +386,8 @@ class QuestionPaser:
 
 class AnswerSearcher:
     def __init__(self):
-<<<<<<< HEAD
-        self.g = Graph("bolt: // localhost:7687", auth=("neo4j", "12345678"), name="neo4j")
-=======
         self.g = Graph("bolt://localhost:7687", auth = ('neo4j','wang250188'))
         self.classifier = QuestionClassifier()
->>>>>>> 0a557a87e1334e01cada2d40be72241774ec70b1
 
     '''执行cypher查询，并返回相应结果'''
 
@@ -553,6 +549,7 @@ class ChatBotGraph:
 
 chatbot = ChatBotGraph()
 
+
 # 给javascript的接口函数
 def chatbot_response(question):
     print(question)
@@ -561,12 +558,8 @@ def chatbot_response(question):
     response = answer[0]
     return response
 
-# TODO: test_str为系统无法回答的问题时程序会报错
-# test_str = "你好"
-# answer = chatbot_response(test_str)
-# print(answer[0])
 
-# TODO: 写一个返回查询question的cypher语句的函数
+# 返回查询question的cypher语句的函数
 def cypher_json(question):
     res = chatbot.get_query(question)
     cypherString = res[1][0]['sql']
