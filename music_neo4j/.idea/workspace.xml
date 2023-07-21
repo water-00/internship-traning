@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="138816a4-51d7-42da-8b88-8608afead4b4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/neo4j_project.py" beforeDir="false" afterPath="$PROJECT_DIR$/neo4j_project.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../music_website/chatbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/../music_website/chatbot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../music_website/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../music_website/static/index.js" afterDir="false" />
+=======
+    <list default="true" id="f5dfa4d4-f4a3-41ac-bf19-6d83f9319c4f" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+>>>>>>> cd07dc5e8c7cb1826fc23376eac7743afe999407
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -18,13 +24,20 @@
       </list>
     </option>
   </component>
+=======
+>>>>>>> cd07dc5e8c7cb1826fc23376eac7743afe999407
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="2SS9Vq9bbhBwe0Uz1pCxvfbDFf9" />
+=======
+  <component name="ProjectId" id="2ShDx8qWW5AOrJvyIvIOkKGVny9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+>>>>>>> cd07dc5e8c7cb1826fc23376eac7743afe999407
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -33,6 +46,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+<<<<<<< HEAD
     &quot;last_opened_file_path&quot;: &quot;E:/pycharm/music数据库大作业&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
@@ -45,6 +59,21 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1689129141316</updated>
+=======
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/pythonProject2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;RainbowCSV.Settings&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="f5dfa4d4-f4a3-41ac-bf19-6d83f9319c4f" name="更改" comment="" />
+      <created>1689590163988</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1689590163988</updated>
+>>>>>>> cd07dc5e8c7cb1826fc23376eac7743afe999407
     </task>
     <servers />
   </component>
